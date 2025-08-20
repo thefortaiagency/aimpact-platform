@@ -1,0 +1,20 @@
+/* Aether Messaging Styles */
+.aether-chat {
+  @apply bg-gradient-to-br from-gray-900 to-gray-800 text-white;
+}
+
+.aether-message {
+  @apply rounded-lg p-3 mb-2;
+}
+
+.aether-message-sent {
+  @apply bg-blue-600 text-white ml-auto;
+}
+
+.aether-message-received {
+  @apply bg-gray-700 text-white;
+}
+
+.aether-input {
+  @apply bg-gray-800 border-gray-700 text-white placeholder-gray-400;
+}
