@@ -6,7 +6,23 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useTelnyxCall } from '@/hooks/use-telnyx-call'
+// import { useTelnyxCall } from '@/hooks/use-telnyx-call'
+
+// Mock implementation until the hook is available
+const useTelnyxCall = () => ({
+  isInitialized: false,
+  isConnecting: false,
+  callState: 'idle' as 'idle' | 'connecting' | 'ringing' | 'active' | 'held' | 'new',
+  isMuted: false,
+  isOnHold: false,
+  callDuration: 0,
+  initialize: async () => {},
+  makeCall: async (number: string) => { console.log('Making call to:', number) },
+  hangupCall: async () => {},
+  toggleMute: () => {},
+  toggleHold: () => {},
+  sendDTMF: (digit: string) => { console.log('DTMF:', digit) }
+})
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 
@@ -47,13 +63,13 @@ export default function DialpadModal({ isOpen, onClose, initialPhoneNumber = '' 
     }
   }, [initialPhoneNumber])
 
-  const isCallActive = callState && ['connecting', 'ringing', 'active', 'held'].includes(callState.state)
+  const isCallActive = callState && ['connecting', 'ringing', 'active', 'held'].includes(callState)
 
   const handleDigit = (digit: string) => {
     setPhoneNumber(prev => prev + digit)
     
     // Send DTMF if call is active
-    if (callState?.state === 'active') {
+    if (callState === 'active') {
       sendDTMF(digit)
     }
   }
@@ -92,7 +108,7 @@ export default function DialpadModal({ isOpen, onClose, initialPhoneNumber = '' 
   const getCallStatusDisplay = () => {
     if (!callState) return null
     
-    switch (callState.state) {
+    switch (callState) {
       case 'new':
       case 'connecting':
         return { text: 'Connecting...', color: 'yellow', animated: true }
@@ -182,9 +198,9 @@ export default function DialpadModal({ isOpen, onClose, initialPhoneNumber = '' 
                 }`}
               >
                 <p className="text-sm text-muted-foreground">
-                  {callState?.direction === 'inbound' ? 'Incoming call from' : 'Calling'}
+                  Calling
                 </p>
-                <p className="font-medium text-lg">{phoneNumber || callState?.from}</p>
+                <p className="font-medium text-lg">{phoneNumber}</p>
                 <div className="flex items-center justify-center gap-2 mt-2">
                   <div className={`h-2 w-2 rounded-full ${
                     callStatus.color === 'green' ? 'bg-green-500' :
@@ -200,7 +216,7 @@ export default function DialpadModal({ isOpen, onClose, initialPhoneNumber = '' 
                   }`}>
                     {callStatus.text}
                   </span>
-                  {callState?.state === 'active' && (
+                  {callState === 'active' && (
                     <Badge variant="outline" className="ml-2">{callDuration}</Badge>
                   )}
                 </div>
@@ -210,7 +226,7 @@ export default function DialpadModal({ isOpen, onClose, initialPhoneNumber = '' 
 
           {/* Dialpad */}
           <AnimatePresence>
-            {(!isCallActive || callState?.state === 'active') && (
+            {(!isCallActive || callState === 'active') && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -260,7 +276,7 @@ export default function DialpadModal({ isOpen, onClose, initialPhoneNumber = '' 
               </Button>
             ) : (
               <>
-                {callState?.state === 'active' && (
+                {callState === 'active' && (
                   <>
                     <Button
                       size="lg"

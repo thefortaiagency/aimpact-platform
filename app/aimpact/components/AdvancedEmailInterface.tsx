@@ -90,7 +90,7 @@ export default function AdvancedEmailInterface() {
       }
     } catch (error) {
       console.error('Error loading folders:', error);
-      alert('Failed to connect to Gmail API: ' + error.message);
+      alert('Failed to connect to Gmail API: ' + (error instanceof Error ? error.message : 'Unknown error'));
     } finally {
       setLoading(false);
     }

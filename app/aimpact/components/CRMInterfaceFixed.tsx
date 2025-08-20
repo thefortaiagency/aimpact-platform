@@ -769,7 +769,7 @@ export default function CRMInterfaceFixed() {
         <FloatingEmail
           isOpen={showFloatingEmail}
           onClose={() => setShowFloatingEmail(false)}
-          initialEmail={floatingEmailData.email}
+          initialTo={floatingEmailData.email}
           contactName={floatingEmailData.contactName}
         />
       )}

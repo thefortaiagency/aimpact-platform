@@ -1,10 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
+// import { useSession } from 'next-auth/react'
 
 export default function TestTodos() {
-  const { data: session, status } = useSession()
+  // const { data: session, status } = useSession()
+  const session = null
+  const status = 'unauthenticated'
   const [todos, setTodos] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')

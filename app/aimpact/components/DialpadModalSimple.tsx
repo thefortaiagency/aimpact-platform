@@ -6,7 +6,17 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useTelnyxSimpleCall } from '@/hooks/use-telnyx-simple-call'
+// import { useTelnyxSimpleCall } from '@/hooks/use-telnyx-simple-call'
+
+// Mock implementation until the hook is available
+const useTelnyxSimpleCall = () => ({
+  callState: 'idle' as 'idle' | 'connecting' | 'active' | 'ended',
+  isMuted: false,
+  makeCall: async (number: string) => { console.log('Making call to:', number) },
+  hangupCall: async () => {},
+  toggleMute: () => {},
+  isCallActive: false
+})
 import { Badge } from '@/components/ui/badge'
 
 interface DialpadModalProps {
@@ -69,12 +79,10 @@ export default function DialpadModalSimple({ isOpen, onClose, initialPhoneNumber
   ]
 
   const getCallStatusDisplay = () => {
-    switch (callState.status) {
-      case 'initiating':
+    switch (callState) {
+      case 'connecting':
         return { text: 'Connecting...', color: 'yellow', animated: true }
-      case 'ringing':
-        return { text: 'Ringing...', color: 'blue', animated: true }
-      case 'connected':
+      case 'active':
         return { text: 'Connected', color: 'green', animated: false }
       default:
         return null
@@ -134,7 +142,7 @@ export default function DialpadModalSimple({ isOpen, onClose, initialPhoneNumber
                 }`}
               >
                 <p className="text-sm text-muted-foreground">Calling</p>
-                <p className="font-medium text-lg">{callState.phoneNumber}</p>
+                <p className="font-medium text-lg">{phoneNumber}</p>
                 <div className="flex items-center justify-center gap-2 mt-2">
                   <div className={`h-2 w-2 rounded-full ${
                     callStatus.color === 'green' ? 'bg-green-500' :
@@ -148,8 +156,8 @@ export default function DialpadModalSimple({ isOpen, onClose, initialPhoneNumber
                   }`}>
                     {callStatus.text}
                   </span>
-                  {callState.status === 'connected' && (
-                    <Badge variant="outline" className="ml-2">{callState.duration}</Badge>
+                  {callState === 'active' && (
+                    <Badge variant="outline" className="ml-2">00:00</Badge>
                   )}
                 </div>
               </motion.div>
@@ -207,7 +215,7 @@ export default function DialpadModalSimple({ isOpen, onClose, initialPhoneNumber
               </Button>
             ) : (
               <>
-                {callState.status === 'connected' && (
+                {callState === 'active' && (
                   <Button
                     size="lg"
                     variant={isMuted ? "secondary" : "outline"}
