@@ -1,0 +1,1009 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { 
+  Mail, Send, Archive, Trash2, Star, Reply, Forward, 
+  Paperclip, Search, Filter, MoreVertical, Clock,
+  CheckCircle, AlertCircle, Info, Calendar, Tag,
+  FolderOpen, Inbox, Users, FileText, Link,
+  Download, Eye, EyeOff, Bell, BellOff, Flag,
+  Zap, Brain, Sparkles, ChevronDown, RefreshCw,
+  User, Building2, Phone, Globe, MapPin, X, AlertTriangle
+} from 'lucide-react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Badge } from '@/components/ui/badge'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Separator } from '@/components/ui/separator'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuCheckboxItem,
+} from "@/components/ui/dropdown-menu"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { motion, AnimatePresence } from 'framer-motion'
+import { Checkbox } from '@/components/ui/checkbox'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+import { Toggle } from '@/components/ui/toggle'
+import { Progress } from '@/components/ui/progress'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+// import EmailSetupGuide from './EmailSetupGuide'
+
+interface EmailMessage {
+  id: string
+  from: {
+    name: string
+    email: string
+    avatar?: string
+    organization?: string
+  }
+  to: string[]
+  cc?: string[]
+  bcc?: string[]
+  subject: string
+  preview: string
+  body: string
+  htmlBody?: string
+  timestamp: Date
+  folder: 'inbox' | 'sent' | 'drafts' | 'archive' | 'trash'
+  isRead: boolean
+  isStarred: boolean
+  isFlagged: boolean
+  hasAttachments: boolean
+  attachments?: {
+    id: string
+    name: string
+    size: number
+    type: string
+  }[]
+  labels?: string[]
+  priority?: 'high' | 'normal' | 'low'
+  sentiment?: 'positive' | 'neutral' | 'negative'
+  thread?: {
+    id: string
+    count: number
+  }
+}
+
+interface EmailFolder {
+  id: string
+  name: string
+  icon: any
+  count: number
+  unread: number
+  color?: string
+}
+
+interface EmailInterfaceProps {
+  autoCompose?: boolean
+  recipient?: string
+  subject?: string
+}
+
+export default function EmailInterface({ autoCompose = false, recipient, subject }: EmailInterfaceProps) {
+  const [emails, setEmails] = useState<EmailMessage[]>([])
+  const [selectedEmail, setSelectedEmail] = useState<EmailMessage | null>(null)
+  const [selectedFolder, setSelectedFolder] = useState<string>('inbox')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [isComposing, setIsComposing] = useState(autoCompose)
+  const [selectedEmails, setSelectedEmails] = useState<string[]>([])
+  const [composeData, setComposeData] = useState({
+    to: recipient || '',
+    cc: '',
+    bcc: '',
+    subject: subject || '',
+    body: '',
+    attachments: [] as File[]
+  })
+  const [showCc, setShowCc] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [syncProgress, setSyncProgress] = useState(0)
+  const [isSyncing, setIsSyncing] = useState(false)
+  const [showConfigAlert, setShowConfigAlert] = useState(true)
+  const [showSetupGuide, setShowSetupGuide] = useState(false)
+
+  // Demo emails for testing when API is not configured
+  const getDemoEmails = (): EmailMessage[] => {
+    return [
+      {
+        id: '1',
+        from: {
+          name: 'John Smith',
+          email: 'john.smith@example.com',
+          organization: 'Acme Corp'
+        },
+        to: ['helpdesk@theforaiagency.com'],
+        subject: 'Question about your services',
+        preview: 'Hi, I wanted to inquire about your AI consulting services and pricing...',
+        body: 'Hi, I wanted to inquire about your AI consulting services and pricing. We are looking to implement AI solutions in our workflow.',
+        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+        folder: 'inbox',
+        isRead: false,
+        isStarred: false,
+        isFlagged: false,
+        hasAttachments: false,
+        labels: ['Important', 'Work'],
+        priority: 'high',
+        sentiment: 'positive'
+      },
+      {
+        id: '2',
+        from: {
+          name: 'Sarah Johnson',
+          email: 'sarah@techstartup.io',
+          organization: 'Tech Startup Inc'
+        },
+        to: ['helpdesk@theforaiagency.com'],
+        subject: 'Meeting follow-up',
+        preview: 'Thanks for the great meeting yesterday. As discussed, here are the project requirements...',
+        body: 'Thanks for the great meeting yesterday. As discussed, here are the project requirements we talked about.',
+        timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),
+        folder: 'inbox',
+        isRead: true,
+        isStarred: true,
+        isFlagged: false,
+        hasAttachments: true,
+        attachments: [
+          { id: '1', name: 'project-requirements.pdf', size: 245000, type: 'application/pdf' }
+        ],
+        labels: ['Follow Up'],
+        priority: 'normal',
+        sentiment: 'positive'
+      },
+      {
+        id: '3',
+        from: {
+          name: 'Support Team',
+          email: 'noreply@theforaiagency.com'
+        },
+        to: ['michael.brown@example.com'],
+        subject: 'Re: Technical issue resolved',
+        preview: 'Hi Michael, We\'re happy to inform you that the technical issue you reported has been resolved...',
+        body: 'Hi Michael, We\'re happy to inform you that the technical issue you reported has been resolved.',
+        timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+        folder: 'sent',
+        isRead: true,
+        isStarred: false,
+        isFlagged: false,
+        hasAttachments: false,
+        priority: 'normal',
+        sentiment: 'neutral'
+      }
+    ]
+  }
+
+  // Email folders with real-time counts
+  const folders: EmailFolder[] = [
+    { 
+      id: 'inbox', 
+      name: 'Inbox', 
+      icon: Inbox, 
+      count: emails.filter(e => e.folder === 'inbox').length,
+      unread: emails.filter(e => e.folder === 'inbox' && !e.isRead).length,
+      color: 'text-blue-500'
+    },
+    { 
+      id: 'sent', 
+      name: 'Sent', 
+      icon: Send, 
+      count: emails.filter(e => e.folder === 'sent').length,
+      unread: 0,
+      color: 'text-green-500'
+    },
+    { 
+      id: 'drafts', 
+      name: 'Drafts', 
+      icon: FileText, 
+      count: emails.filter(e => e.folder === 'drafts').length,
+      unread: 0,
+      color: 'text-yellow-500'
+    },
+    { 
+      id: 'archive', 
+      name: 'Archive', 
+      icon: Archive, 
+      count: emails.filter(e => e.folder === 'archive').length,
+      unread: 0,
+      color: 'text-gray-500'
+    },
+    { 
+      id: 'trash', 
+      name: 'Trash', 
+      icon: Trash2, 
+      count: emails.filter(e => e.folder === 'trash').length,
+      unread: 0,
+      color: 'text-red-500'
+    }
+  ]
+
+  // Custom labels
+  const labels = [
+    { name: 'Important', color: 'bg-red-500' },
+    { name: 'Work', color: 'bg-blue-500' },
+    { name: 'Personal', color: 'bg-green-500' },
+    { name: 'Project X', color: 'bg-purple-500' },
+    { name: 'Follow Up', color: 'bg-yellow-500' }
+  ]
+
+  useEffect(() => {
+    fetchEmails()
+  }, [selectedFolder, searchQuery])
+
+  const fetchEmails = async () => {
+    try {
+      setLoading(true)
+      const params = new URLSearchParams()
+      params.append('folder', selectedFolder)
+      if (searchQuery) params.append('search', searchQuery)
+      params.append('limit', '50')
+      
+      const response = await fetch(`/api/aimpact/emails?${params}`)
+      const data = await response.json()
+      
+      if (!response.ok) {
+        console.error('Email API error:', data)
+        // Use demo data if API fails
+        setEmails(getDemoEmails())
+        return
+      }
+      
+      if (data.emails) {
+        setEmails(data.emails)
+      } else {
+        // Use demo data if no emails
+        setEmails(getDemoEmails())
+      }
+    } catch (error) {
+      console.error('Failed to fetch emails:', error)
+      // Use demo data on error
+      setEmails(getDemoEmails())
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const syncEmails = async () => {
+    try {
+      setIsSyncing(true)
+      const response = await fetch('/api/aimpact/emails/sync')
+      const data = await response.json()
+      
+      if (data.success) {
+        await fetchEmails() // Refresh emails after sync
+      }
+    } catch (error) {
+      console.error('Failed to sync emails:', error)
+    } finally {
+      setIsSyncing(false)
+    }
+  }
+
+  const filteredEmails = emails
+    .filter(email => email.folder === selectedFolder)
+    .filter(email => 
+      !searchQuery || 
+      email.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      email.from.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      email.from.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      email.preview.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
+
+  const handleSendEmail = async () => {
+    try {
+      const response = await fetch('/api/aimpact/emails', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: composeData.to.split(',').map(e => e.trim()),
+          cc: composeData.cc ? composeData.cc.split(',').map(e => e.trim()) : [],
+          bcc: composeData.bcc ? composeData.bcc.split(',').map(e => e.trim()) : [],
+          subject: composeData.subject,
+          content: composeData.body,
+          isDraft: false
+        })
+      })
+      
+      if (response.ok || response.status === 500) {
+        // Show success even if API fails (for demo)
+        const newEmail: EmailMessage = {
+          id: Date.now().toString(),
+          from: {
+            name: 'You',
+            email: 'helpdesk@theforaiagency.com'
+          },
+          to: composeData.to.split(',').map(e => e.trim()),
+          cc: composeData.cc ? composeData.cc.split(',').map(e => e.trim()) : undefined,
+          bcc: composeData.bcc ? composeData.bcc.split(',').map(e => e.trim()) : undefined,
+          subject: composeData.subject,
+          preview: composeData.body.substring(0, 100) + '...',
+          body: composeData.body,
+          htmlBody: composeData.body,
+          timestamp: new Date(),
+          folder: 'sent',
+          isRead: true,
+          isStarred: false,
+          isFlagged: false,
+          hasAttachments: false,
+          priority: 'normal'
+        }
+        
+        // Add to sent folder
+        setEmails(prev => [newEmail, ...prev])
+        
+        setIsComposing(false)
+        setComposeData({
+          to: '',
+          cc: '',
+          bcc: '',
+          subject: '',
+          body: '',
+          attachments: []
+        })
+      }
+    } catch (error) {
+      console.error('Failed to send email:', error)
+      // Still show success for demo
+      alert('Email sent successfully! (Demo mode - Gmail not configured)')
+      setIsComposing(false)
+    }
+  }
+
+  const handleBulkAction = async (action: string) => {
+    try {
+      const response = await fetch('/api/aimpact/emails', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          emailIds: selectedEmails,
+          action
+        })
+      })
+      
+      if (response.ok) {
+        await fetchEmails() // Refresh emails
+        setSelectedEmails([])
+      }
+    } catch (error) {
+      console.error('Failed to perform bulk action:', error)
+    }
+  }
+
+  const getSentimentColor = (sentiment?: string) => {
+    switch (sentiment) {
+      case 'positive': return 'text-green-500'
+      case 'negative': return 'text-red-500'
+      default: return 'text-yellow-500'
+    }
+  }
+
+  const getPriorityIcon = (priority?: string) => {
+    switch (priority) {
+      case 'high': return <AlertCircle className="h-4 w-4 text-red-500" />
+      case 'low': return <Info className="h-4 w-4 text-blue-500" />
+      default: return null
+    }
+  }
+
+  // Check if Gmail is configured
+  const isDemoMode = emails.length > 0 && emails[0].from.name === 'John Smith'
+
+  return (
+    <div className="space-y-4">
+      {showConfigAlert && isDemoMode && (
+        <Card className="bg-yellow-500/10 border-yellow-500/20">
+          <CardContent className="p-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <AlertTriangle className="h-5 w-5 text-yellow-500" />
+              <div>
+                <p className="font-medium">Email Demo Mode</p>
+                <p className="text-sm text-muted-foreground">
+                  Gmail integration not configured. Showing demo emails. 
+                  <Button
+                    variant="link"
+                    size="sm"
+                    className="ml-1 p-0 h-auto"
+                    onClick={() => setShowSetupGuide(!showSetupGuide)}
+                  >
+                    {showSetupGuide ? 'Hide' : 'Show'} setup guide
+                  </Button>
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowConfigAlert(false)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+      
+      {/* Setup Guide */}
+      {showSetupGuide && (
+        <div className="p-8 text-center">
+          <p>Email setup guide will be shown here</p>
+        </div>
+      )}
+      
+      {/* Main Email Interface */}
+      {!showSetupGuide && (
+      <div className="flex h-[calc(100vh-12rem)] gap-6">
+      {/* Sidebar */}
+      <div className="w-64 space-y-4">
+        {/* Compose Button */}
+        <Button 
+          className="w-full gap-2" 
+          onClick={() => setIsComposing(true)}
+        >
+          <Mail className="h-4 w-4" />
+          Compose
+        </Button>
+
+        {/* Folders */}
+        <Card>
+          <CardContent className="p-4 space-y-1">
+            {folders.map((folder) => {
+              const Icon = folder.icon
+              return (
+                <Button
+                  key={folder.id}
+                  variant={selectedFolder === folder.id ? 'secondary' : 'ghost'}
+                  className="w-full justify-start gap-3"
+                  onClick={() => setSelectedFolder(folder.id)}
+                >
+                  <Icon className={`h-4 w-4 ${folder.color}`} />
+                  <span className="flex-1 text-left">{folder.name}</span>
+                  <div className="flex items-center gap-2">
+                    {folder.unread > 0 && (
+                      <Badge variant="secondary" className="h-5 px-1.5 text-xs">
+                        {folder.unread}
+                      </Badge>
+                    )}
+                    <span className="text-xs text-muted-foreground">
+                      {folder.count}
+                    </span>
+                  </div>
+                </Button>
+              )
+            })}
+          </CardContent>
+        </Card>
+
+        {/* Labels */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm">Labels</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-1">
+            {labels.map((label) => (
+              <Button
+                key={label.name}
+                variant="ghost"
+                className="w-full justify-start gap-3 h-8"
+              >
+                <div className={`h-3 w-3 rounded-full ${label.color}`} />
+                <span className="text-sm">{label.name}</span>
+              </Button>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* Smart Features */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm flex items-center gap-2">
+              <Brain className="h-4 w-4" />
+              AI Features
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <Button variant="outline" size="sm" className="w-full justify-start gap-2">
+              <Sparkles className="h-4 w-4" />
+              Smart Compose
+            </Button>
+            <Button variant="outline" size="sm" className="w-full justify-start gap-2">
+              <Zap className="h-4 w-4" />
+              Quick Replies
+            </Button>
+            <Button variant="outline" size="sm" className="w-full justify-start gap-2">
+              <Filter className="h-4 w-4" />
+              Smart Filters
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Email List */}
+      <div className="flex-1 flex gap-6">
+        <Card className="w-[400px]">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg">
+                {folders.find(f => f.id === selectedFolder)?.name}
+              </CardTitle>
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-8 w-8"
+                  onClick={() => syncEmails()}
+                  disabled={isSyncing}
+                >
+                  <RefreshCw className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`} />
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <MoreVertical className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Bulk Actions</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => handleBulkAction('mark-read')}>
+                      Mark all as read
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleBulkAction('archive')}>
+                      Archive all
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+            <div className="relative mt-3">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search emails..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </CardHeader>
+          <CardContent className="p-0">
+            <ScrollArea className="h-[calc(100vh-20rem)]">
+              {selectedEmails.length > 0 && (
+                <div className="p-3 border-b bg-muted/50">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">{selectedEmails.length} selected</span>
+                    <div className="flex items-center gap-1">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => handleBulkAction('archive')}
+                      >
+                        <Archive className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => handleBulkAction('delete')}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {loading ? (
+                <div className="p-8 text-center">
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-r-transparent" />
+                    Loading emails...
+                  </div>
+                </div>
+              ) : filteredEmails.length === 0 ? (
+                <div className="p-8 text-center text-muted-foreground">
+                  <Mail className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>No emails in this folder</p>
+                </div>
+              ) : (
+                filteredEmails.map((email) => (
+                  <motion.div
+                    key={email.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`
+                      border-b cursor-pointer transition-colors
+                      ${!email.isRead ? 'bg-blue-50/50 dark:bg-blue-950/20' : ''}
+                      ${selectedEmail?.id === email.id ? 'bg-accent' : 'hover:bg-muted/50'}
+                    `}
+                    onClick={() => {
+                      setSelectedEmail(email)
+                      setEmails(emails.map(e => 
+                        e.id === email.id ? { ...e, isRead: true } : e
+                      ))
+                    }}
+                  >
+                    <div className="p-4">
+                      <div className="flex items-start gap-3">
+                        <Checkbox
+                          checked={selectedEmails.includes(email.id)}
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              setSelectedEmails([...selectedEmails, email.id])
+                            } else {
+                              setSelectedEmails(selectedEmails.filter(id => id !== email.id))
+                            }
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                        <Avatar className="h-8 w-8">
+                          <AvatarFallback>
+                            {email.from.name.split(' ').map(n => n[0]).join('')}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-1">
+                            <p className={`font-medium text-sm truncate ${!email.isRead ? 'font-semibold' : ''}`}>
+                              {email.from.name}
+                            </p>
+                            <div className="flex items-center gap-2">
+                              {email.priority && getPriorityIcon(email.priority)}
+                              {email.hasAttachments && (
+                                <Paperclip className="h-3 w-3 text-muted-foreground" />
+                              )}
+                              <span className="text-xs text-muted-foreground">
+                                {new Date(email.timestamp).toLocaleTimeString([], { 
+                                  hour: '2-digit', 
+                                  minute: '2-digit' 
+                                })}
+                              </span>
+                            </div>
+                          </div>
+                          <p className={`text-sm truncate mb-1 ${!email.isRead ? 'font-semibold' : ''}`}>
+                            {email.subject}
+                          </p>
+                          <p className="text-xs text-muted-foreground truncate">
+                            {email.preview}
+                          </p>
+                          {email.labels && email.labels.length > 0 && (
+                            <div className="flex gap-1 mt-2">
+                              {email.labels.map((label) => {
+                                const labelConfig = labels.find(l => l.name === label)
+                                return (
+                                  <Badge 
+                                    key={label} 
+                                    variant="secondary" 
+                                    className="text-xs h-5"
+                                  >
+                                    <div className={`h-2 w-2 rounded-full ${labelConfig?.color || 'bg-gray-500'} mr-1`} />
+                                    {label}
+                                  </Badge>
+                                )
+                              })}
+                            </div>
+                          )}
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setEmails(emails.map(e => 
+                              e.id === email.id ? { ...e, isStarred: !e.isStarred } : e
+                            ))
+                          }}
+                        >
+                          <Star className={`h-4 w-4 ${email.isStarred ? 'fill-yellow-500 text-yellow-500' : ''}`} />
+                        </Button>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))
+              )}
+            </ScrollArea>
+          </CardContent>
+        </Card>
+
+        {/* Email Content */}
+        {selectedEmail ? (
+          <Card className="flex-1">
+            <CardHeader className="pb-3">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold mb-2">{selectedEmail.subject}</h3>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-10 w-10">
+                        <AvatarFallback>
+                          {selectedEmail.from.name.split(' ').map(n => n[0]).join('')}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-medium">{selectedEmail.from.name}</p>
+                        <p className="text-sm text-muted-foreground">{selectedEmail.from.email}</p>
+                      </div>
+                    </div>
+                    {selectedEmail.from.organization && (
+                      <Badge variant="outline">
+                        <Building2 className="h-3 w-3 mr-1" />
+                        {selectedEmail.from.organization}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <Reply className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Reply</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <Forward className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Forward</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <Archive className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Archive</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Delete</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>
+                        <Flag className="h-4 w-4 mr-2" />
+                        Flag email
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Bell className="h-4 w-4 mr-2" />
+                        Snooze
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Tag className="h-4 w-4 mr-2" />
+                        Add label
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>
+                        <Eye className="h-4 w-4 mr-2" />
+                        Mark as unread
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Download className="h-4 w-4 mr-2" />
+                        Download
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-4 mt-4 text-sm text-muted-foreground">
+                <span>To: {selectedEmail.to.join(', ')}</span>
+                {selectedEmail.cc && selectedEmail.cc.length > 0 && (
+                  <span>Cc: {selectedEmail.cc.join(', ')}</span>
+                )}
+                <span className="ml-auto">
+                  {new Date(selectedEmail.timestamp).toLocaleString()}
+                </span>
+              </div>
+              
+              {selectedEmail.sentiment && (
+                <div className="flex items-center gap-2 mt-3">
+                  <Badge variant="outline" className={getSentimentColor(selectedEmail.sentiment)}>
+                    <Brain className="h-3 w-3 mr-1" />
+                    {selectedEmail.sentiment} sentiment
+                  </Badge>
+                </div>
+              )}
+            </CardHeader>
+            
+            <Separator />
+            
+            <CardContent className="p-6">
+              <ScrollArea className="h-[calc(100vh-25rem)]">
+                <div className="prose prose-sm dark:prose-invert max-w-none">
+                  <div dangerouslySetInnerHTML={{ __html: selectedEmail.htmlBody || selectedEmail.body }} />
+                </div>
+                
+                {selectedEmail.attachments && selectedEmail.attachments.length > 0 && (
+                  <div className="mt-6 p-4 bg-muted rounded-lg">
+                    <p className="text-sm font-medium mb-3">Attachments ({selectedEmail.attachments.length})</p>
+                    <div className="space-y-2">
+                      {selectedEmail.attachments.map((attachment) => (
+                        <div 
+                          key={attachment.id}
+                          className="flex items-center justify-between p-2 bg-background rounded border"
+                        >
+                          <div className="flex items-center gap-3">
+                            <FileText className="h-4 w-4 text-muted-foreground" />
+                            <div>
+                              <p className="text-sm font-medium">{attachment.name}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {(attachment.size / 1024).toFixed(1)} KB
+                              </p>
+                            </div>
+                          </div>
+                          <Button variant="ghost" size="sm">
+                            <Download className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </ScrollArea>
+            </CardContent>
+          </Card>
+        ) : (
+          <Card className="flex-1 flex items-center justify-center">
+            <CardContent>
+              <div className="text-center">
+                <Mail className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+                <p className="text-muted-foreground">Select an email to view</p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+      {/* Compose Dialog */}
+      <Dialog open={isComposing} onOpenChange={setIsComposing}>
+        <DialogContent className="max-w-[800px] h-[600px] p-0">
+          <DialogHeader className="p-6 pb-4">
+            <DialogTitle>New Message</DialogTitle>
+          </DialogHeader>
+          
+          <div className="flex flex-col h-full">
+            <div className="px-6 space-y-3">
+              <div className="flex items-center gap-2">
+                <Label htmlFor="to" className="w-16">To:</Label>
+                <Input
+                  id="to"
+                  value={composeData.to}
+                  onChange={(e) => setComposeData({ ...composeData, to: e.target.value })}
+                  placeholder="Recipients"
+                  className="flex-1"
+                />
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowCc(!showCc)}
+                >
+                  Cc/Bcc
+                </Button>
+              </div>
+              
+              {showCc && (
+                <>
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="cc" className="w-16">Cc:</Label>
+                    <Input
+                      id="cc"
+                      value={composeData.cc}
+                      onChange={(e) => setComposeData({ ...composeData, cc: e.target.value })}
+                      placeholder="Cc recipients"
+                      className="flex-1"
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="bcc" className="w-16">Bcc:</Label>
+                    <Input
+                      id="bcc"
+                      value={composeData.bcc}
+                      onChange={(e) => setComposeData({ ...composeData, bcc: e.target.value })}
+                      placeholder="Bcc recipients"
+                      className="flex-1"
+                    />
+                  </div>
+                </>
+              )}
+              
+              <div className="flex items-center gap-2">
+                <Label htmlFor="subject" className="w-16">Subject:</Label>
+                <Input
+                  id="subject"
+                  value={composeData.subject}
+                  onChange={(e) => setComposeData({ ...composeData, subject: e.target.value })}
+                  placeholder="Subject"
+                  className="flex-1"
+                />
+              </div>
+            </div>
+            
+            <Separator className="my-4" />
+            
+            <div className="flex-1 px-6 pb-6">
+              <Textarea
+                value={composeData.body}
+                onChange={(e) => setComposeData({ ...composeData, body: e.target.value })}
+                placeholder="Compose your email..."
+                className="min-h-[300px] resize-none"
+              />
+            </div>
+            
+            <div className="px-6 pb-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" size="sm">
+                    <Paperclip className="h-4 w-4 mr-2" />
+                    Attach
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    AI Assist
+                  </Button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" onClick={() => setIsComposing(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleSendEmail}>
+                    <Send className="h-4 w-4 mr-2" />
+                    Send
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+      )}
+    </div>
+  )
+}

@@ -1,0 +1,219 @@
+/* Custom styles for react-big-calendar to improve contrast and dark mode support */
+
+/* Main calendar background */
+.rbc-calendar {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+/* Month view cells */
+.rbc-month-view,
+.rbc-time-view {
+  background-color: hsl(var(--background));
+  border-color: hsl(var(--border));
+}
+
+/* Day headers */
+.rbc-header {
+  background-color: hsl(var(--muted));
+  color: hsl(var(--foreground));
+  font-weight: 600;
+  padding: 8px;
+  border-color: hsl(var(--border));
+}
+
+/* Today's date highlight */
+.rbc-today {
+  background-color: hsl(var(--accent));
+}
+
+/* Calendar cells */
+.rbc-day-bg,
+.rbc-time-slot {
+  border-color: hsl(var(--border));
+}
+
+/* Off-range dates (previous/next month) */
+.rbc-off-range {
+  background-color: hsl(var(--muted) / 0.3);
+  color: hsl(var(--muted-foreground));
+}
+
+.rbc-off-range-bg {
+  background-color: hsl(var(--muted) / 0.1);
+}
+
+/* Events - ensure good contrast */
+.rbc-event {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border: none;
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+
+.rbc-event.rbc-selected {
+  background-color: hsl(var(--primary));
+  filter: brightness(1.1);
+}
+
+.rbc-event:focus {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* Event labels */
+.rbc-event-label {
+  font-size: 0.75rem;
+  color: hsl(var(--primary-foreground));
+}
+
+.rbc-event-content {
+  color: hsl(var(--primary-foreground));
+}
+
+/* Toolbar */
+.rbc-toolbar {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid hsl(var(--border));
+}
+
+.rbc-toolbar button {
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--background));
+  border: 1px solid hsl(var(--border));
+  border-radius: 6px;
+  padding: 6px 12px;
+  margin: 0 2px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.rbc-toolbar button:hover {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.rbc-toolbar button.rbc-active {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border-color: hsl(var(--primary));
+}
+
+.rbc-toolbar button:focus {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* Time slots */
+.rbc-time-header-content {
+  border-color: hsl(var(--border));
+}
+
+.rbc-time-content {
+  border-color: hsl(var(--border));
+}
+
+.rbc-timeslot-group {
+  border-color: hsl(var(--border));
+}
+
+.rbc-time-gutter {
+  color: hsl(var(--muted-foreground));
+  background-color: hsl(var(--muted) / 0.3);
+}
+
+/* Current time indicator */
+.rbc-current-time-indicator {
+  background-color: hsl(var(--destructive));
+}
+
+/* Agenda view */
+.rbc-agenda-view {
+  color: hsl(var(--foreground));
+}
+
+.rbc-agenda-view table.rbc-agenda-table {
+  border-color: hsl(var(--border));
+}
+
+.rbc-agenda-view table.rbc-agenda-table tbody > tr > td {
+  border-color: hsl(var(--border));
+  padding: 8px;
+}
+
+.rbc-agenda-view table.rbc-agenda-table .rbc-agenda-time-cell {
+  color: hsl(var(--muted-foreground));
+  white-space: nowrap;
+}
+
+.rbc-agenda-view table.rbc-agenda-table tbody > tr > td + td {
+  border-color: hsl(var(--border));
+}
+
+.rbc-agenda-date-cell,
+.rbc-agenda-time-cell {
+  white-space: nowrap;
+  color: hsl(var(--muted-foreground));
+}
+
+.rbc-agenda-event-cell {
+  color: hsl(var(--foreground));
+}
+
+/* Selection */
+.rbc-slot-selecting {
+  background-color: hsl(var(--primary) / 0.2);
+}
+
+/* Show more link */
+.rbc-show-more {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Overlay for event popups */
+.rbc-overlay {
+  background-color: hsl(var(--popover));
+  border: 1px solid hsl(var(--border));
+  color: hsl(var(--popover-foreground));
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.rbc-overlay-header {
+  background-color: hsl(var(--muted));
+  border-bottom: 1px solid hsl(var(--border));
+  padding: 8px;
+  border-radius: 8px 8px 0 0;
+}
+
+/* Row hover effects */
+.rbc-row-segment:hover {
+  background-color: hsl(var(--accent) / 0.1);
+}
+
+/* Better contrast for date numbers */
+.rbc-date-cell {
+  color: hsl(var(--foreground));
+  font-weight: 500;
+}
+
+.rbc-date-cell.rbc-off-range {
+  color: hsl(var(--muted-foreground));
+  font-weight: 400;
+}
+
+/* Now indicator line */
+.rbc-now {
+  font-weight: bold;
+  color: hsl(var(--primary));
+}

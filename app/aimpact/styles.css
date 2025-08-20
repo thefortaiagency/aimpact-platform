@@ -1,0 +1,105 @@
+/* Custom styles for Unicomm */
+
+/* Ensure proper flex layout for chat sidebar */
+.aimpact-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.aimpact-main-content {
+  flex: 1;
+  min-width: 0; /* Prevent flex item from overflowing */
+  display: flex;
+  flex-direction: column;
+}
+
+.aimpact-chat-sidebar {
+  flex-shrink: 0;
+  height: 100%;
+}
+
+/* Override card backgrounds - reduced blur for performance */
+.unicomm-card {
+  @apply bg-card/95;
+}
+
+.unicomm-card-light {
+  @apply bg-card/90;
+}
+
+/* For nested cards that need even more transparency */
+.unicomm-card-extra-light {
+  @apply bg-card/85;
+}
+
+/* Performance optimizations */
+* {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Reduce GPU usage for transforms */
+.transition-all {
+  will-change: auto;
+}
+
+/* Disable heavy effects on low-end devices */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Mobile-specific button improvements */
+@media (max-width: 768px) {
+  /* Ensure buttons are easily tappable on mobile */
+  button {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  /* Minimum touch target size for mobile */
+  button,
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Prevent zoom on double tap */
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+  
+  /* Improve dialog handling on mobile */
+  [role="dialog"] {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
+
+/* NEXUS AI Hover Animation - Only on hover, not continuous */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Apply animation only on hover to reduce CPU usage */
+.nexus-ai-button:hover img {
+  animation: pulse 0.5s ease-in-out;
+}
