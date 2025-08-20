@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options';
+import { auth } from '@/auth';
 
 // Initialize Gmail client
 const getGmailClient = async (userEmail: string) => {
@@ -35,7 +34,7 @@ const getGmailClient = async (userEmail: string) => {
 // GET - Fetch all Gmail folders/labels with message counts
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     const userEmail = session?.user?.email || process.env.DEFAULT_CALENDAR_EMAIL || 'aoberlin@thefortaiagency.ai';
     
     const gmail = await getGmailClient(userEmail);
@@ -142,7 +141,7 @@ export async function GET(request: NextRequest) {
 // POST - Create new Gmail folder/label
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     const userEmail = session?.user?.email || process.env.DEFAULT_CALENDAR_EMAIL || 'aoberlin@thefortaiagency.ai';
     
     const body = await request.json();
@@ -213,7 +212,7 @@ export async function POST(request: NextRequest) {
 // DELETE - Delete Gmail folder/label
 export async function DELETE(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     const userEmail = session?.user?.email || process.env.DEFAULT_CALENDAR_EMAIL || 'aoberlin@thefortaiagency.ai';
     
     const { searchParams } = new URL(request.url);

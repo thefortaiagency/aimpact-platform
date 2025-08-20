@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options';
+import { auth } from '@/auth';
 
 // Service account email
 const SERVICE_ACCOUNT_EMAIL = 'aimpacthelp@thefortai-gc-env.iam.gserviceaccount.com';
@@ -48,7 +47,7 @@ async function getGmailClient(userEmail: string) {
 // GET - List all filters
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -75,7 +74,7 @@ export async function GET(request: NextRequest) {
 // POST - Create a new filter
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -131,7 +130,7 @@ export async function POST(request: NextRequest) {
 // DELETE - Delete a filter
 export async function DELETE(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

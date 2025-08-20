@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options';
+import { auth } from '@/auth';
 import twilio from 'twilio';
 
 // Twilio configuration
@@ -14,7 +13,7 @@ const primaryNumber = phoneNumbers[0] || process.env.TWILIO_PHONE_NUMBER || '+12
 export async function GET(request: NextRequest) {
   try {
     // Check if user is authenticated (optional for now)
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     
     // Create a clean identity - use consistent identity for anonymous users
     const baseIdentity = session?.user?.email || 'default_agent';

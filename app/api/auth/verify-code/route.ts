@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyCode } from '@/lib/twilio-service';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options';
+import { auth } from '@/auth';
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,7 +24,7 @@ export async function POST(request: NextRequest) {
     }
     
     // Get current session (if exists)
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     
     // If verification successful and user is logged in, 
     // you might want to update their profile to mark phone as verified

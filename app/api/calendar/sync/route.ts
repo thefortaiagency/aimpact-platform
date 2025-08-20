@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options';
+import { auth } from '@/auth';
 import { createClient } from '@supabase/supabase-js';
 import { format } from 'date-fns';
 
@@ -52,7 +51,7 @@ const getGoogleCalendarClient = async (userEmail: string) => {
 // GET - Fetch calendar events (both from database and Google Calendar)
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     const supabase = getSupabaseClient();
     
     const { searchParams } = new URL(request.url);

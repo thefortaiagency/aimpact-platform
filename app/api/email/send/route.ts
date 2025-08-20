@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options';
+import { auth } from '@/auth';
 import { db } from '@/lib/db/drizzle';
 import { emailCampaigns, campaignRecipients, emailContacts } from '@/lib/db/schema';
 import { eq, and, inArray } from 'drizzle-orm';
@@ -12,7 +11,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 // POST /api/email/send - Send campaign emails
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

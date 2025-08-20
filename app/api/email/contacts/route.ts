@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options';
+import { auth } from '@/auth';
 import { db } from '@/lib/db/drizzle';
 import { emailContacts } from '@/lib/db/schema';
 import { eq, desc, and, like, or } from 'drizzle-orm';
@@ -9,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 // GET /api/email/contacts - Fetch all contacts
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -72,7 +71,7 @@ export async function GET(request: NextRequest) {
 // POST /api/email/contacts - Create new contact
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -134,7 +133,7 @@ export async function POST(request: NextRequest) {
 // PATCH /api/email/contacts/[id] - Update contact
 export async function PATCH(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -186,7 +185,7 @@ export async function PATCH(request: NextRequest) {
 // DELETE /api/email/contacts/[id] - Delete contact
 export async function DELETE(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

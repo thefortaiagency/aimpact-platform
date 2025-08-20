@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options';
+import { auth } from '@/auth';
 import { createClient } from '@supabase/supabase-js';
 import OpenAI from 'openai';
 import fs from 'fs';
@@ -209,7 +208,7 @@ interface EmailRule {
 // POST - Create new email rule (PRODUCTION)
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     const userEmail = session?.user?.email || process.env.DEFAULT_CALENDAR_EMAIL || 'aoberlin@thefortaiagency.ai';
     
     const body = await request.json();
@@ -316,7 +315,7 @@ Examples:
 // GET - Fetch email rules (PRODUCTION)
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     const userEmail = session?.user?.email || process.env.DEFAULT_CALENDAR_EMAIL || 'aoberlin@thefortaiagency.ai';
     
     const { rules, storage } = await getRules(userEmail);
@@ -342,7 +341,7 @@ export async function GET(request: NextRequest) {
 // DELETE - Delete rule (PRODUCTION)
 export async function DELETE(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     const userEmail = session?.user?.email || process.env.DEFAULT_CALENDAR_EMAIL || 'aoberlin@thefortaiagency.ai';
     
     const { searchParams } = new URL(request.url);

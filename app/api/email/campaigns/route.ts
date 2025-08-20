@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options';
+import { auth } from '@/auth';
 import { db } from '@/lib/db/drizzle';
 import { emailCampaigns, campaignRecipients, emailContacts, listMemberships } from '@/lib/db/schema';
 import { eq, desc, and, inArray } from 'drizzle-orm';
@@ -84,7 +83,7 @@ export async function POST(request: NextRequest) {
   try {
     // For now, allow unauthenticated access for internal API calls
     // In production, implement proper service-to-service auth
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     const userId = session?.user?.id || 'system';
 
     const body = await request.json();
@@ -199,7 +198,7 @@ export async function POST(request: NextRequest) {
 // DELETE /api/email/campaigns/[id] - Delete campaign
 export async function DELETE(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

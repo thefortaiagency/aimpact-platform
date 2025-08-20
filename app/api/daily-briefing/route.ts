@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options'
+import { auth } from '@/auth'
 import { createClient } from '@supabase/supabase-js'
 
 // Initialize Supabase
@@ -35,7 +34,7 @@ const motivationalQuotes = [
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }

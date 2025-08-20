@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options';
+import { auth } from '@/auth';
 
 // Initialize Gmail client
 const getGmailClient = async (userEmail: string) => {
@@ -35,7 +34,7 @@ const getGmailClient = async (userEmail: string) => {
 // POST - Manage email operations (move, mark read, delete, etc.)
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     const userEmail = session?.user?.email || process.env.DEFAULT_CALENDAR_EMAIL || 'aoberlin@thefortaiagency.ai';
     
     const body = await request.json();
@@ -171,7 +170,7 @@ export async function POST(request: NextRequest) {
 // GET - Get emails from specific folder with pagination
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     const userEmail = session?.user?.email || process.env.DEFAULT_CALENDAR_EMAIL || 'aoberlin@thefortaiagency.ai';
     
     const { searchParams } = new URL(request.url);

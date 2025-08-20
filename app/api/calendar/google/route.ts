@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options';
+import { auth } from '@/auth';
 
 // Initialize Google Calendar client with service account
 const getGoogleCalendarClient = async (userEmail: string) => {
@@ -39,7 +38,7 @@ const getGoogleCalendarClient = async (userEmail: string) => {
 // DELETE - Delete a Google Calendar event
 export async function DELETE(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     const userEmail = session?.user?.email || process.env.DEFAULT_CALENDAR_EMAIL || 'aoberlin@thefortaiagency.ai';
     
     const { searchParams } = new URL(request.url);
@@ -86,7 +85,7 @@ export async function DELETE(request: NextRequest) {
 // POST - Create a new Google Calendar event
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     const userEmail = session?.user?.email || process.env.DEFAULT_CALENDAR_EMAIL || 'aoberlin@thefortaiagency.ai';
     
     const body = await request.json();
@@ -186,7 +185,7 @@ export async function POST(request: NextRequest) {
 // PATCH - Update an existing Google Calendar event
 export async function PATCH(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     const userEmail = session?.user?.email || process.env.DEFAULT_CALENDAR_EMAIL || 'aoberlin@thefortaiagency.ai';
     
     const body = await request.json();
@@ -307,7 +306,7 @@ export async function PATCH(request: NextRequest) {
 // GET - Search for events by title or date
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     const userEmail = session?.user?.email || process.env.DEFAULT_CALENDAR_EMAIL || 'aoberlin@thefortaiagency.ai';
     
     const { searchParams } = new URL(request.url);

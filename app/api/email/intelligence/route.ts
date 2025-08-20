@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options';
+import { auth } from '@/auth';
 import OpenAI from 'openai';
 
 // Initialize OpenAI
@@ -108,7 +107,7 @@ const extractEmailMetadata = (headers: any[]) => {
 // GET - Fetch and analyze inbox
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     const userEmail = session?.user?.email || process.env.DEFAULT_CALENDAR_EMAIL || 'aoberlin@thefortaiagency.ai';
     
     const { searchParams } = new URL(request.url);
@@ -247,7 +246,7 @@ export async function GET(request: NextRequest) {
 // POST - Draft intelligent email response
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     const userEmail = session?.user?.email || process.env.DEFAULT_CALENDAR_EMAIL || 'aoberlin@thefortaiagency.ai';
     
     const body = await request.json();
@@ -368,7 +367,7 @@ Return ONLY the email body text, no subject line or metadata.`;
 // PATCH - Mark emails as read/unread, archive, etc.
 export async function PATCH(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     const userEmail = session?.user?.email || process.env.DEFAULT_CALENDAR_EMAIL || 'aoberlin@thefortaiagency.ai';
     
     const body = await request.json();

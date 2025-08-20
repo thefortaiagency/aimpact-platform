@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options';
+import { auth } from '@/auth';
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
@@ -15,7 +14,7 @@ export async function GET(
 ) {
   const { id } = await params;
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -59,7 +58,7 @@ export async function DELETE(
 ) {
   const { id } = await params;
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) {
       return NextResponse.json(
         { error: 'Unauthorized' },

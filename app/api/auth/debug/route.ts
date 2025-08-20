@@ -1,12 +1,11 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../[...nextauth]/auth-options';
+import { auth } from '@/auth';
 import { cookies } from 'next/headers';
 
 export async function GET() {
   try {
     // Get the session
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     
     // Get all cookies
     const cookieStore = cookies();

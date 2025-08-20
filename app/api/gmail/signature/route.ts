@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options';
+import { auth } from '@/auth';
 
 // Initialize Gmail client
 const getGmailClient = async (userEmail: string) => {
@@ -32,7 +31,7 @@ const getGmailClient = async (userEmail: string) => {
 // GET - Fetch user's Gmail signature
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     const userEmail = 'aoberlin@thefortaiagency.ai';
     
     const gmail = await getGmailClient(userEmail);
