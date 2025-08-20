@@ -3,8 +3,9 @@ import { withDatabase } from '@/lib/db/utils'
 
 export const GET = withDatabase(async (
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) => {
+  const { id } = await params;
   const { db } = await import('@/lib/db/drizzle')
   const { eq } = await import('drizzle-orm')
   const { organizationIndustryIntel } = await import('@/lib/db/schema-crm-enhanced')
@@ -13,7 +14,7 @@ export const GET = withDatabase(async (
     const intel = await db
       .select()
       .from(organizationIndustryIntel)
-      .where(eq(organizationIndustryIntel.organizationId, params.id))
+      .where(eq(organizationIndustryIntel.organizationId, id))
       .limit(1)
 
     return NextResponse.json(intel[0] || null)

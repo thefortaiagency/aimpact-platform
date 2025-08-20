@@ -11,8 +11,9 @@ const supabase = createClient(
 // GET /api/sms/conversations/[id] - Get conversation messages
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     const session = await getServerSession(authOptions);
     if (!session) {
@@ -22,7 +23,7 @@ export async function GET(
       );
     }
 
-    const contactId = params.id;
+    const contactId = id;
 
     // Get messages for this contact
     const { data: messages, error } = await supabase
@@ -54,8 +55,9 @@ export async function GET(
 // DELETE /api/sms/conversations/[id] - Delete conversation by phone number
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     const session = await getServerSession(authOptions);
     if (!session) {
@@ -67,7 +69,7 @@ export async function DELETE(
 
     // The id parameter can be either a contact ID or phone number
     // We'll try to handle both cases
-    const identifier = decodeURIComponent(params.id);
+    const identifier = decodeURIComponent(id);
     
     // Delete all communications (SMS messages) for this identifier
     // Try by phone number first, then by contact ID

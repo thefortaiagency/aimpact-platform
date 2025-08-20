@@ -4,8 +4,9 @@ import { sql } from 'drizzle-orm'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     // Since we don't have a tickets table yet, return mock data
     // In production, you would query your actual tickets table

@@ -14,8 +14,9 @@ const getSupabaseClient = () => {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     const supabase = getSupabaseClient();
     
@@ -25,7 +26,7 @@ export async function GET(
         *,
         organization:organizations(*)
       `)
-      .eq('id', params.id)
+      .eq('id', id)
       .single();
     
     if (error) {
@@ -59,8 +60,9 @@ export async function GET(
 // Update project
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     const supabase = getSupabaseClient();
     const body = await request.json();
@@ -68,7 +70,7 @@ export async function PATCH(
     const { data: project, error } = await supabase
       .from('projects')
       .update(body)
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single();
     
@@ -97,15 +99,16 @@ export async function PATCH(
 // Delete project
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     const supabase = getSupabaseClient();
     
     const { error } = await supabase
       .from('projects')
       .delete()
-      .eq('id', params.id);
+      .eq('id', id);
     
     if (error) {
       console.error('Error deleting project:', error);
