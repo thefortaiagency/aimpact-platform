@@ -51,7 +51,9 @@ export default function MobileChatPage() {
       const isInFullscreen = window.matchMedia('(display-mode: fullscreen)').matches
       const isInMinimalUI = window.matchMedia('(display-mode: minimal-ui)').matches
       const isIOSStandalone = (window.navigator as any).standalone === true
-      setIsStandalone(isInStandaloneMode || isInFullscreen || isInMinimalUI || isIOSStandalone)
+      const standalone = isInStandaloneMode || isInFullscreen || isInMinimalUI || isIOSStandalone
+      setIsStandalone(standalone)
+      return standalone
     }
     
     // PWA Install Prompt Handler
