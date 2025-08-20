@@ -5,8 +5,7 @@ import '@/lib/debug-utils' // Debug utility to catch contact errors
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-// import { useSession, signOut } from 'next-auth/react'
-import { signOut } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 import { Phone, Mail, Users, MessageSquare, Clock, BarChart3, Brain, Settings, Bell, Ticket, Menu, X, Video, Headphones, Home, FileText, Briefcase, Send, ChevronLeft, ChevronRight, User, LogOut, MessageCircle, Calendar, CheckSquare } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -44,17 +43,15 @@ import { PersistentPhoneService } from '@/components/PersistentPhoneService'
 
 export default function ImpactPage() {
   const router = useRouter()
-  // const { data: session, status } = useSession()
-  const session = { user: { email: 'user@example.com' } } // Mock session for build
-  const status = 'authenticated'
+  const { data: session, status } = useSession()
   
   // Redirect to login if not authenticated
-  // useEffect(() => {
-  //   if (status === 'loading') return
-  //   if (!session) {
-  //     router.push('/login')
-  //   }
-  // }, [session, status, router])
+  useEffect(() => {
+    if (status === 'loading') return
+    if (!session) {
+      router.push('/login')
+    }
+  }, [session, status, router])
   const [activeTab, setActiveTab] = useState('crm') // Start with CRM as it's the beginning of the workflow
   const [notifications] = useState(0) // Real notification count - starts at 0
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false) // Starts closed
