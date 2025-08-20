@@ -868,7 +868,7 @@ What would you like to work on today?`,
                   <AvatarFallback className={message.role === 'user' ? 'bg-blue-500' : 'bg-gradient-to-r from-purple-500 to-blue-500'}>
                     {message.role === 'user' ? 'U' : (
                       <img 
-                        src="/impactlogotransparent.png" 
+                        src="/aimpact-logo.png" 
                         alt="NEXUS" 
                         className="h-4 w-4 object-contain"
                       />

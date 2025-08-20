@@ -149,15 +149,15 @@ export default function ImpactPage() {
       
       {/* Modern Sidebar */}
       <div 
-        className={`${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:relative inset-y-0 left-0 ${sidebarCollapsed ? 'w-16' : 'w-64'} border-r bg-background/95 z-50 lg:z-10 transition-all duration-300 ease-in-out flex flex-col`}
+        className={`${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:relative inset-y-0 left-0 ${sidebarCollapsed ? 'w-16' : 'w-64'} glassmorphic-card border-r border-white/20 z-50 lg:z-10 transition-all duration-300 ease-in-out flex flex-col`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className={`p-4 ${sidebarCollapsed ? 'lg:p-2' : 'lg:p-6'} flex-1 flex flex-col`}>
           <div className="flex items-center justify-between mb-8">
-            <Link href="/nexus" className={`flex items-center gap-1 hover:opacity-80 transition-opacity ${sidebarCollapsed ? 'justify-center' : ''}`}>
+            <Link href="/aimpact" className={`flex items-center gap-1 hover:opacity-80 transition-opacity ${sidebarCollapsed ? 'justify-center' : ''}`}>
               <img 
-                src="/impactlogotransparent.png" 
-                alt="Impact Logo" 
+                src="/aimpact-logo.png" 
+                alt="AImpact Logo" 
                 className={`${sidebarCollapsed ? 'h-8 lg:h-10' : 'h-12 lg:h-16'} w-auto transition-all`}
               />
             </Link>
@@ -291,7 +291,7 @@ export default function ImpactPage() {
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.3 }}
-          className="border-b bg-background/90"
+          className="glassmorphic border-b border-white/20"
         >
           <div className="p-4 lg:p-6">
             <div className="flex items-center gap-3 lg:gap-4">
@@ -326,9 +326,9 @@ export default function ImpactPage() {
               
               {/* Center section - Impact Nexus with Notification */}
               <div className="hidden sm:flex flex-1 lg:w-1/3 justify-center items-center gap-4">
-                <div className="bg-background/90 px-6 py-2 rounded-lg border border-border">
+                <div className="glassmorphic px-6 py-2 rounded-lg">
                   <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
-                    Impact Nexus
+                    AImpact Nexus
                   </h1>
                 </div>
                 <Button variant="ghost" size="icon" className="relative">
@@ -452,7 +452,7 @@ export default function ImpactPage() {
               
               {activeTab === 'messaging' && <StreamMessaging />}
               {activeTab === 'email' && (
-                <div className="bg-white rounded-lg min-h-[600px]">
+                <div className="glassmorphic-card min-h-[600px]">
                   <WorkingGmailInterface />
                 </div>
               )}

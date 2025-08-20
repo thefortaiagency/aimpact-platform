@@ -40,18 +40,21 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Sign in to AImpact</CardTitle>
-          <CardDescription>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="w-full max-w-md glassmorphic-card p-8">
+        <div className="flex justify-center mb-6">
+          <img src="/aimpact-logo.png" alt="AImpact" className="h-16 w-auto" />
+        </div>
+        <div className="space-y-1 text-center mb-6">
+          <h2 className="text-2xl font-bold text-white">Sign in to AImpact</h2>
+          <p className="text-white/70">
             Enter your email and password to access your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+          </p>
+        </div>
+        <div>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-white">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -60,10 +63,11 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={loading}
+                className="glassmorphic-input text-white"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-white">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -71,17 +75,22 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 disabled={loading}
+                className="glassmorphic-input text-white"
               />
             </div>
             {error && (
-              <div className="text-sm text-red-500 text-center">{error}</div>
+              <div className="text-sm text-red-400 text-center">{error}</div>
             )}
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button 
+              type="submit" 
+              className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold" 
+              disabled={loading}
+            >
               {loading ? 'Signing in...' : 'Sign in'}
             </Button>
           </form>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   )
 }
