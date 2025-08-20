@@ -30,3 +30,10 @@ export function useToast() {
 
   return { toast, toasts, dismiss }
 }
+
+// Export toast function for direct use
+export const toast = (props: Omit<Toast, 'id'>) => {
+  // This is a singleton pattern for the toast
+  // In a real app, you'd use a context provider
+  console.log('Toast:', props)
+}

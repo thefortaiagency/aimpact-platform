@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Phone, PhoneOff, Mic, MicOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-export default function EmbeddedSoftphone() {
+export function EmbeddedSoftphone() {
   const [isCallActive, setIsCallActive] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
 
@@ -45,3 +45,5 @@ export default function EmbeddedSoftphone() {
     </div>
   )
 }
+
+export default EmbeddedSoftphone

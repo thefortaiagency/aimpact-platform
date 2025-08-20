@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Phone, PhoneOff } from 'lucide-react'
 
-export default function PersistentPhoneService() {
+export function PersistentPhoneService() {
   const [isConnected, setIsConnected] = useState(false)
 
   useEffect(() => {
@@ -38,3 +38,5 @@ export default function PersistentPhoneService() {
     </div>
   )
 }
+
+export default PersistentPhoneService

@@ -12,7 +12,7 @@ interface InviteToMeetingModalProps {
   meetingId: string
 }
 
-export default function InviteToMeetingModal({ isOpen, onClose, meetingId }: InviteToMeetingModalProps) {
+export function InviteToMeetingModal({ isOpen, onClose, meetingId }: InviteToMeetingModalProps) {
   const [email, setEmail] = useState('')
   const [inviteSent, setInviteSent] = useState(false)
 
@@ -75,3 +75,5 @@ export default function InviteToMeetingModal({ isOpen, onClose, meetingId }: Inv
     </Dialog>
   )
 }
+
+export default InviteToMeetingModal
