@@ -324,10 +324,12 @@ export default function ImpactPage() {
               
               {/* Center section - Impact Nexus with Notification */}
               <div className="hidden sm:flex flex-1 lg:w-1/3 justify-center items-center gap-4">
-                <div className="glassmorphic-dark px-6 py-2 rounded-lg">
-                  <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+                <div className="glassmorphic-dark px-6 py-2 rounded-lg relative">
+                  <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-purple-600 via-blue-500 to-cyan-400 bg-clip-text text-transparent animate-gradient drop-shadow-[0_0_20px_rgba(147,51,234,0.5)]">
                     AImpact Nexus
                   </h1>
+                  {/* Subtle glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-blue-500/20 to-cyan-400/20 blur-xl -z-10 animate-pulse"></div>
                 </div>
                 <Button variant="ghost" size="icon" className="relative">
                   <Bell className="h-5 w-5" />
