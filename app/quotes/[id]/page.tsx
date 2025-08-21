@@ -190,27 +190,46 @@ export default function PublicQuotePage() {
           <div className="text-center">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Ready to Get Started?</h3>
             <div className="space-y-4">
-              <a
-                href="https://buy.stripe.com/00wcN73Gw6Vygj307yasg00"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-blue-700 transition-all"
-              >
-                Pay Setup Fee ($52,500)
-              </a>
-              <p className="text-gray-600">or</p>
+              <div className="flex flex-col space-y-3">
+                <h4 className="font-semibold text-gray-800">Choose Payment Option:</h4>
+                <a
+                  href="https://buy.stripe.com/fZu6oJ7WMdjW4Al6vWasg05"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block bg-gradient-to-r from-green-600 to-green-700 text-white px-8 py-3 rounded-lg font-semibold hover:from-green-700 hover:to-green-800 transition-all text-center"
+                >
+                  Pay 50% Deposit ($26,250)
+                  <span className="block text-sm font-normal mt-1">Recommended - Balance due on go-live</span>
+                </a>
+                <a
+                  href="https://buy.stripe.com/dRmfZj7WMeo05Ep07yasg06"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-blue-700 transition-all text-center"
+                >
+                  Pay Full Amount ($52,500)
+                  <span className="block text-sm font-normal mt-1">Single payment - No balance due</span>
+                </a>
+              </div>
+              <div className="flex items-center my-4">
+                <div className="flex-1 border-t border-gray-300"></div>
+                <p className="mx-4 text-gray-600">or</p>
+                <div className="flex-1 border-t border-gray-300"></div>
+              </div>
               <button
                 onClick={() => window.print()}
-                className="bg-gray-200 text-gray-800 px-8 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-all"
+                className="bg-gray-200 text-gray-800 px-8 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-all w-full"
               >
                 Print Quote
               </button>
               <div className="mt-4 p-4 bg-blue-50 rounded-lg">
                 <p className="text-sm text-blue-800">
-                  <strong>Payment Options:</strong><br/>
-                  • Pay setup fee now with card or ACH (no login required)<br/>
+                  <strong>Payment Information:</strong><br/>
+                  • Both options accept card or ACH bank transfer<br/>
+                  • No login or account required<br/>
+                  • ACH recommended for lower fees (0.8% vs 2.9%)<br/>
                   • Monthly subscription ($6,000/mo) starts after go-live<br/>
-                  • ACH recommended for lower fees on large amounts
+                  • If 50% deposit chosen, balance link sent at completion
                 </p>
               </div>
             </div>
