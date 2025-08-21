@@ -134,9 +134,16 @@
     @apply text-white;
   }
   
-  .glassmorphic h1, .glassmorphic h2, .glassmorphic h3,
-  .glassmorphic-dark h1, .glassmorphic-dark h2, .glassmorphic-dark h3,
-  .glassmorphic-card h1, .glassmorphic-card h2, .glassmorphic-card h3 {
+  .glassmorphic h2, .glassmorphic h3,
+  .glassmorphic-dark h2, .glassmorphic-dark h3,
+  .glassmorphic-card h2, .glassmorphic-card h3 {
+    @apply text-white font-semibold;
+  }
+  
+  /* Don't override h1 if it has gradient animation */
+  .glassmorphic h1:not(.animate-gradient),
+  .glassmorphic-dark h1:not(.animate-gradient),
+  .glassmorphic-card h1:not(.animate-gradient) {
     @apply text-white font-semibold;
   }
   
@@ -180,8 +187,8 @@
     color: white !important;
   }
   
-  /* Nuclear option - any text inside sidebar div */
-  div[class*="glassmorphic"] * {
+  /* Nuclear option - any text inside sidebar div - but exclude gradient text */
+  div[class*="glassmorphic"] *:not(.animate-gradient) {
     color: white !important;
   }
   
