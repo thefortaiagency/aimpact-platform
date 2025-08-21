@@ -68,8 +68,6 @@ export default function PublicQuotePage() {
     );
   }
 
-  const firstYearTotal = quote.setupTotal + (quote.monthlyTotal * 12);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-12">
       <div className="max-w-4xl mx-auto px-4">
@@ -172,24 +170,16 @@ export default function PublicQuotePage() {
           </div>
 
           {/* Financial Summary */}
-          <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg p-6">
+          <div className="bg-gradient-to-r from-gray-400 to-gray-700 text-white rounded-lg p-6">
             <h3 className="text-xl font-bold mb-4">Financial Summary</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-purple-100">One-Time Setup</p>
+                <p className="text-gray-100">One-Time Setup</p>
                 <p className="text-2xl font-bold">${quote.setupTotal.toLocaleString()}</p>
               </div>
               <div>
-                <p className="text-purple-100">Monthly Recurring</p>
+                <p className="text-gray-100">Monthly Recurring</p>
                 <p className="text-2xl font-bold">${quote.monthlyTotal.toLocaleString()}/mo</p>
-              </div>
-              <div>
-                <p className="text-purple-100">Annual Recurring</p>
-                <p className="text-2xl font-bold">${(quote.monthlyTotal * 12).toLocaleString()}/yr</p>
-              </div>
-              <div>
-                <p className="text-purple-100">First Year Total</p>
-                <p className="text-2xl font-bold">${firstYearTotal.toLocaleString()}</p>
               </div>
             </div>
           </div>
