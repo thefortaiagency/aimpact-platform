@@ -43,7 +43,6 @@ export async function GET(
           { description: 'Comprehensive Training Package', amount: 0, recurring: false, included: true },
           { description: 'Plex Integration', amount: 0, recurring: false, included: true },
           { description: 'AI Model Tuning & Optimization', amount: 0, recurring: false, included: true },
-          { description: '24/7 Priority Support', amount: 0, recurring: false, included: true },
           { description: 'vCIO Consultation Services', amount: 0, recurring: false, included: true },
         ],
         description: '3-facility production analytics platform with 6-week implementation and 99.9% uptime SLA.',
