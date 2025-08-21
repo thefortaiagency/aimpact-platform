@@ -359,7 +359,7 @@ const VideoRoomComplete = ({ callId, userName }: { callId: string; userName: str
           <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <img src="/impactlogotransparent.png" alt="AImpact" className="h-6 w-6" />
+              <img src="/aimpact-logo.png" alt="AImpact" className="h-6 w-6" />
               <span className="font-semibold text-lg bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 AImpact Meeting
               </span>

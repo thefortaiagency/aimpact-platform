@@ -139,7 +139,7 @@ export default function ImpactPage() {
       
       {/* Modern Sidebar */}
       <div 
-        className={`${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:relative inset-y-0 left-0 ${sidebarCollapsed ? 'w-16' : 'w-64'} glassmorphic-card border-r border-white/20 z-50 lg:z-10 transition-all duration-300 ease-in-out flex flex-col`}
+        className={`${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:relative inset-y-0 left-0 ${sidebarCollapsed ? 'w-16' : 'w-64'} glassmorphic-dark border-r border-white/20 z-50 lg:z-10 transition-all duration-300 ease-in-out flex flex-col`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className={`p-4 ${sidebarCollapsed ? 'lg:p-2' : 'lg:p-6'} flex-1 flex flex-col`}>
@@ -231,7 +231,7 @@ export default function ImpactPage() {
                   </Avatar>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">{session?.user?.email || 'Guest'}</p>
-                    <p className="text-xs text-muted-foreground">Admin</p>
+                    <p className="text-xs text-white/70">Admin</p>
                   </div>
                 </>
               )}
@@ -281,7 +281,7 @@ export default function ImpactPage() {
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.3 }}
-          className="glassmorphic border-b border-white/20"
+          className="glassmorphic-dark border-b border-white/20"
         >
           <div className="p-4 lg:p-6">
             <div className="flex items-center gap-3 lg:gap-4">
@@ -297,7 +297,7 @@ export default function ImpactPage() {
               
               {/* Left section - Module name */}
               <div className="flex-1 sm:flex-none sm:w-auto lg:w-1/3">
-                <h3 className="text-sm lg:text-base font-medium text-muted-foreground truncate">
+                <h3 className="text-sm lg:text-base font-medium text-white/80 truncate">
                   {activeTab === 'crm' && 'CRM'}
                   {activeTab === 'campaigns' && 'Campaigns'}
                   {activeTab === 'meetings' && 'Meetings'}
@@ -316,7 +316,7 @@ export default function ImpactPage() {
               
               {/* Center section - Impact Nexus with Notification */}
               <div className="hidden sm:flex flex-1 lg:w-1/3 justify-center items-center gap-4">
-                <div className="glassmorphic px-6 py-2 rounded-lg">
+                <div className="glassmorphic-dark px-6 py-2 rounded-lg">
                   <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
                     AImpact Nexus
                   </h1>
@@ -377,7 +377,7 @@ export default function ImpactPage() {
                 >
                   <div className="relative">
                     <img 
-                      src="/impactlogotransparent.png" 
+                      src="/aimpact-logo.png" 
                       alt="NEXUS AI" 
                       className="h-5 w-5 object-contain"
                       loading="lazy"

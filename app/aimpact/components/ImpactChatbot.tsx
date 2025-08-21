@@ -71,7 +71,7 @@ export default function ImpactChatbot() {
               className="h-20 w-20 rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 shadow-lg border border-white/20 p-3 transition-all hover:scale-110"
             >
               <img 
-                src="/impactlogotransparent.png" 
+                src="/aimpact-logo.png" 
                 alt="Impact" 
                 className="w-full h-full object-contain"
               />
@@ -96,7 +96,7 @@ export default function ImpactChatbot() {
                 <div className="flex items-center gap-3">
                   <div className="relative">
                     <img 
-                      src="/impactlogotransparent.png" 
+                      src="/aimpact-logo.png" 
                       alt="Impact" 
                       className="h-10 w-auto"
                     />
@@ -144,7 +144,7 @@ export default function ImpactChatbot() {
                       <Avatar className="h-8 w-8">
                         {message.sender === 'bot' ? (
                           <>
-                            <AvatarImage src="/impactlogotransparent.png" />
+                            <AvatarImage src="/aimpact-logo.png" />
                             <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
                               AI
                             </AvatarFallback>
@@ -176,7 +176,7 @@ export default function ImpactChatbot() {
                   >
                     <div className="flex gap-2 max-w-[80%]">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src="/impactlogotransparent.png" />
+                        <AvatarImage src="/aimpact-logo.png" />
                         <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
                           AI
                         </AvatarFallback>

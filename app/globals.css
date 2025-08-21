@@ -65,7 +65,7 @@
     background-repeat: no-repeat;
   }
   
-  /* Overlay for better text readability */
+  /* Darker overlay for better text readability */
   body::before {
     content: '';
     position: fixed;
@@ -74,9 +74,9 @@
     right: 0;
     bottom: 0;
     background: linear-gradient(135deg, 
-      rgba(10, 10, 35, 0.85) 0%, 
-      rgba(20, 20, 50, 0.75) 50%, 
-      rgba(10, 10, 35, 0.85) 100%);
+      rgba(0, 0, 15, 0.92) 0%, 
+      rgba(10, 10, 30, 0.88) 50%, 
+      rgba(0, 0, 15, 0.92) 100%);
     pointer-events: none;
     z-index: 0;
   }
@@ -88,24 +88,41 @@
   }
 }
 
-/* Glassmorphic card styles */
+/* Glassmorphic card styles - Darker for better visibility */
 @layer components {
   .glassmorphic {
-    @apply backdrop-blur-md bg-white/10 border border-white/20 shadow-xl;
+    @apply backdrop-blur-xl bg-black/60 border border-white/30 shadow-2xl text-white;
   }
   
   .glassmorphic-dark {
-    @apply backdrop-blur-md bg-black/20 border border-white/10 shadow-2xl;
+    @apply backdrop-blur-xl bg-black/80 border border-white/20 shadow-2xl text-white;
   }
   
   .glassmorphic-card {
-    @apply backdrop-blur-lg bg-white/15 border border-white/25 shadow-2xl rounded-lg;
+    @apply backdrop-blur-xl bg-black/70 border border-white/30 shadow-2xl rounded-lg text-white;
     background: linear-gradient(135deg, 
-      rgba(255, 255, 255, 0.15) 0%,
-      rgba(255, 255, 255, 0.05) 100%);
+      rgba(0, 0, 0, 0.75) 0%,
+      rgba(0, 0, 0, 0.65) 100%);
   }
   
   .glassmorphic-input {
-    @apply backdrop-blur-sm bg-white/10 border border-white/20 placeholder:text-white/50;
+    @apply backdrop-blur-md bg-black/50 border border-white/30 text-white placeholder:text-white/60;
+  }
+  
+  /* Ensure all text in glassmorphic elements is white */
+  .glassmorphic *, 
+  .glassmorphic-dark *, 
+  .glassmorphic-card * {
+    @apply text-white;
+  }
+  
+  .glassmorphic h1, .glassmorphic h2, .glassmorphic h3,
+  .glassmorphic-dark h1, .glassmorphic-dark h2, .glassmorphic-dark h3,
+  .glassmorphic-card h1, .glassmorphic-card h2, .glassmorphic-card h3 {
+    @apply text-white font-semibold;
+  }
+  
+  .glassmorphic button, .glassmorphic-dark button, .glassmorphic-card button {
+    @apply hover:bg-white/20 transition-colors;
   }
 }

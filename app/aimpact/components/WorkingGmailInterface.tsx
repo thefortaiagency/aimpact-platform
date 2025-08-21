@@ -159,8 +159,8 @@ export default function WorkingGmailInterface() {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
               <img 
-                src="/impactlogotransparent.png" 
-                alt="Nexus Logo" 
+                src="/aimpact-logo.png" 
+                alt="AImpact Logo" 
                 className="h-8 w-8 object-contain"
               />
               <h1 className="text-2xl font-normal text-gray-900">NexusMail</h1>
