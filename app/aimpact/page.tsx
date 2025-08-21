@@ -92,7 +92,7 @@ export default function ImpactPage() {
       <div className="flex h-screen items-center justify-center bg-background">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading...</p>
+          <p className="text-white/70">Loading...</p>
         </div>
       </div>
     )
@@ -178,7 +178,7 @@ export default function ImpactPage() {
               >
                 <Button
                   variant={activeTab === item.id ? 'default' : 'ghost'}
-                  className={`w-full ${sidebarCollapsed ? 'justify-center px-0' : 'justify-start'} relative overflow-hidden group ${
+                  className={`w-full ${sidebarCollapsed ? 'justify-center px-0' : 'justify-start'} relative overflow-hidden group text-white hover:text-white ${
                     activeTab === item.id ? 'bg-gradient-to-r from-blue-500/10 to-purple-500/10' : ''
                   } ${item.placeholder ? 'opacity-50 cursor-not-allowed' : ''}`}
                   onClick={() => {
@@ -190,7 +190,7 @@ export default function ImpactPage() {
                   disabled={item.placeholder}
                   title={sidebarCollapsed ? item.label : ''}
                 >
-                  <item.icon className={`h-4 w-4 ${sidebarCollapsed ? '' : 'mr-2'}`} />
+                  <item.icon className={`h-4 w-4 ${sidebarCollapsed ? '' : 'mr-2'} text-white`} />
                   {!sidebarCollapsed && (
                     <>
                       {item.label}
@@ -239,10 +239,10 @@ export default function ImpactPage() {
             
             <Button 
               variant="ghost" 
-              className={`w-full ${sidebarCollapsed ? 'justify-center px-0' : 'justify-start'}`}
+              className={`w-full ${sidebarCollapsed ? 'justify-center px-0' : 'justify-start'} text-white hover:text-white`}
               title={sidebarCollapsed ? 'Settings' : ''}
             >
-              <Settings className={`h-4 w-4 ${sidebarCollapsed ? '' : 'mr-2'}`} />
+              <Settings className={`h-4 w-4 ${sidebarCollapsed ? '' : 'mr-2'} text-white`} />
               {!sidebarCollapsed && 'Settings'}
             </Button>
             
@@ -254,7 +254,7 @@ export default function ImpactPage() {
                 await signOut({ callbackUrl: '/' })
               }}
             >
-              <LogOut className={`h-4 w-4 ${sidebarCollapsed ? '' : 'mr-2'}`} />
+              <LogOut className={`h-4 w-4 ${sidebarCollapsed ? '' : 'mr-2'} text-red-400`} />
               {!sidebarCollapsed && 'Sign Out'}
             </Button>
             
