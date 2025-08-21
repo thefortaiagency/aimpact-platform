@@ -123,6 +123,13 @@
   }
   
   .glassmorphic button, .glassmorphic-dark button, .glassmorphic-card button {
-    @apply hover:bg-white/20 transition-colors;
+    @apply hover:bg-white/20 transition-colors !text-white;
+  }
+  
+  /* Force all text in glassmorphic sidebar to be white */
+  .glassmorphic-dark button span,
+  .glassmorphic-dark button div,
+  .glassmorphic-dark nav button {
+    color: white !important;
   }
 }

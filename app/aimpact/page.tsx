@@ -178,7 +178,7 @@ export default function ImpactPage() {
               >
                 <Button
                   variant={activeTab === item.id ? 'default' : 'ghost'}
-                  className={`w-full ${sidebarCollapsed ? 'justify-center px-0' : 'justify-start'} relative overflow-hidden group text-white hover:text-white ${
+                  className={`w-full ${sidebarCollapsed ? 'justify-center px-0' : 'justify-start'} relative overflow-hidden group !text-white hover:!text-white ${
                     activeTab === item.id ? 'bg-gradient-to-r from-blue-500/10 to-purple-500/10' : ''
                   } ${item.placeholder ? 'opacity-50 cursor-not-allowed' : ''}`}
                   onClick={() => {
@@ -193,7 +193,7 @@ export default function ImpactPage() {
                   <item.icon className={`h-4 w-4 ${sidebarCollapsed ? '' : 'mr-2'} text-white`} />
                   {!sidebarCollapsed && (
                     <>
-                      {item.label}
+                      <span className="text-white">{item.label}</span>
                       {item.badge > 0 && (
                         <Badge variant="secondary" className="ml-auto">
                           {item.badge}
@@ -243,7 +243,7 @@ export default function ImpactPage() {
               title={sidebarCollapsed ? 'Settings' : ''}
             >
               <Settings className={`h-4 w-4 ${sidebarCollapsed ? '' : 'mr-2'} text-white`} />
-              {!sidebarCollapsed && 'Settings'}
+              {!sidebarCollapsed && <span className="text-white">Settings</span>}
             </Button>
             
             <Button 
@@ -255,7 +255,7 @@ export default function ImpactPage() {
               }}
             >
               <LogOut className={`h-4 w-4 ${sidebarCollapsed ? '' : 'mr-2'} text-red-400`} />
-              {!sidebarCollapsed && 'Sign Out'}
+              {!sidebarCollapsed && <span className="text-red-400">Sign Out</span>}
             </Button>
             
             <Button
