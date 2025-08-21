@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { motion, AnimatePresence } from 'framer-motion'
 import ReactMarkdown from 'react-markdown'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -865,14 +865,11 @@ What would you like to work on today?`,
             >
               <div className={`flex gap-2 max-w-[85%] ${message.role === 'user' ? 'flex-row-reverse' : ''}`}>
                 <Avatar className="h-7 w-7">
+                  {message.role === 'assistant' && (
+                    <AvatarImage src="/aimpact-logo.png" alt="NEXUS" />
+                  )}
                   <AvatarFallback className={message.role === 'user' ? 'bg-blue-500' : 'bg-gradient-to-r from-purple-500 to-blue-500'}>
-                    {message.role === 'user' ? 'U' : (
-                      <img 
-                        src="/aimpact-logo.png" 
-                        alt="NEXUS" 
-                        className="h-4 w-4 object-contain"
-                      />
-                    )}
+                    {message.role === 'user' ? 'U' : 'AI'}
                   </AvatarFallback>
                 </Avatar>
                 <div>

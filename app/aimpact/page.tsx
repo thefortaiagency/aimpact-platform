@@ -119,17 +119,7 @@ export default function ImpactPage() {
   ]
 
   return (
-    <div className="aimpact-container bg-background relative">
-      {/* Background Image - Fixed positioning with performance optimizations */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <img 
-          src="/aethermeetingroom.png" 
-          alt="Background" 
-          className="w-full h-full object-cover opacity-70"
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-background/40"></div>
-      </div>
+    <div className="aimpact-container relative">
       
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
