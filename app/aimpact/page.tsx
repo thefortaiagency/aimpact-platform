@@ -120,6 +120,13 @@ export default function ImpactPage() {
 
   return (
     <div className="aimpact-container relative">
+      <style jsx global>{`
+        /* ABSOLUTE FORCE WHITE TEXT IN SIDEBAR */
+        nav button { color: white !important; }
+        nav button span { color: white !important; }
+        nav button * { color: white !important; }
+        .glassmorphic-dark * { color: white !important; }
+      `}</style>
       
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
@@ -140,6 +147,7 @@ export default function ImpactPage() {
       {/* Modern Sidebar */}
       <div 
         className={`${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:relative inset-y-0 left-0 ${sidebarCollapsed ? 'w-16' : 'w-64'} glassmorphic-dark border-r border-white/20 z-50 lg:z-10 transition-all duration-300 ease-in-out flex flex-col`}
+        style={{ color: 'white' }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className={`p-4 ${sidebarCollapsed ? 'lg:p-2' : 'lg:p-6'} flex-1 flex flex-col`}>

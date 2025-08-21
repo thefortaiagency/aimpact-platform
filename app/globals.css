@@ -126,10 +126,44 @@
     @apply hover:bg-white/20 transition-colors !text-white;
   }
   
-  /* Force all text in glassmorphic sidebar to be white */
-  .glassmorphic-dark button span,
-  .glassmorphic-dark button div,
-  .glassmorphic-dark nav button {
+  /* FORCE ALL TEXT IN SIDEBAR TO BE WHITE - GLOBAL OVERRIDE */
+  .glassmorphic-dark,
+  .glassmorphic-dark *,
+  .glassmorphic-dark button,
+  .glassmorphic-dark button *,
+  .glassmorphic-dark nav,
+  .glassmorphic-dark nav *,
+  .glassmorphic-dark span,
+  .glassmorphic-dark div,
+  .glassmorphic-dark p,
+  .glassmorphic-dark h1,
+  .glassmorphic-dark h2,
+  .glassmorphic-dark h3,
+  .glassmorphic-dark a,
+  .glassmorphic-dark label {
+    color: white !important;
+  }
+  
+  /* Override any button variant ghost styles */
+  button[class*="ghost"] {
+    color: white !important;
+  }
+  
+  button[class*="ghost"]:hover {
+    color: white !important;
+  }
+  
+  /* Specific override for sidebar navigation */
+  nav button {
+    color: white !important;
+  }
+  
+  nav button span {
+    color: white !important;
+  }
+  
+  /* Nuclear option - any text inside sidebar div */
+  div[class*="glassmorphic"] * {
     color: white !important;
   }
 }
