@@ -824,7 +824,7 @@ export default function CRMInterface() {
                 <Brain className="h-5 w-5 text-purple-500" />
               </div>
               <div className="min-w-0">
-                <p className="font-medium">AI Sentiment Analysis</p>
+                <p className="font-medium text-white">AI Sentiment Analysis</p>
                 <p className="text-sm text-muted-foreground">
                   {organizations.length > 0 ? 
                     `Analyzing ${(contacts || []).filter(c => c?.lastSentiment === 'positive').length} positive sentiments across ${organizations.length} clients` : 
