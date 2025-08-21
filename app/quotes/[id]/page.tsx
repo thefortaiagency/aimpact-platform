@@ -238,6 +238,13 @@ export default function PublicQuotePage() {
             <p className="mt-6 text-sm text-gray-500">
               Questions? Contact us at support@aimpactnexus.ai
             </p>
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <p className="text-xs text-gray-500 text-center">
+                Product of <a href="https://aimpactnexus.ai" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:text-purple-700 font-medium">AImpact Nexus</a>
+                <span className="mx-2">•</span>
+                Reseller: <a href="https://thefortaiagency.ai" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 font-medium">The Fort AI Agency</a>
+              </p>
+            </div>
           </div>
         </div>
       </div>
