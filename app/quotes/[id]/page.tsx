@@ -195,7 +195,7 @@ export default function PublicQuotePage() {
               <div className="flex flex-col space-y-3">
                 <h4 className="text-sm sm:text-base font-semibold text-gray-800">Choose Payment Option:</h4>
                 <a
-                  href="https://buy.stripe.com/fZu6oJ7WMdjW4Al6vWasg05"
+                  href="https://pay.aimpactnexus.ai/b/fZu6oJ7WMdjW4Al6vWasg05"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block bg-gradient-to-r from-green-600 to-green-700 text-white px-4 sm:px-6 md:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:from-green-700 hover:to-green-800 transition-all text-center"
@@ -204,7 +204,7 @@ export default function PublicQuotePage() {
                   <span className="block text-xs sm:text-sm font-normal mt-1">Recommended - Balance due on go-live</span>
                 </a>
                 <a
-                  href="https://buy.stripe.com/dRmfZj7WMeo05Ep07yasg06"
+                  href="https://pay.aimpactnexus.ai/b/dRmfZj7WMeo05Ep07yasg06"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 sm:px-6 md:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:from-purple-700 hover:to-blue-700 transition-all text-center"
