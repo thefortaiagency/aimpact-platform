@@ -167,18 +167,30 @@
     color: white !important;
   }
   
-  /* Force ALL h2 titles to be white */
-  h2.text-2xl.font-bold {
+  /* Force h2 titles to be white ONLY in dark containers */
+  .glassmorphic h2,
+  .glassmorphic-dark h2,
+  .glassmorphic-card h2 {
     color: white !important;
   }
   
-  /* Force ALL component headers to be white */
-  h2 {
-    color: white !important;
+  /* Default text colors for Cards (light backgrounds) */
+  .bg-card h2,
+  .bg-card p,
+  .bg-card span,
+  .bg-card div {
+    color: inherit !important;
   }
   
-  /* Force ALL paragraph descriptions to be light white */
-  p.text-muted-foreground {
+  /* Muted foreground should be gray in light cards */
+  .bg-card .text-muted-foreground {
+    color: rgb(107, 114, 128) !important;
+  }
+  
+  /* But white in dark containers */
+  .glassmorphic .text-muted-foreground,
+  .glassmorphic-dark .text-muted-foreground,
+  .glassmorphic-card .text-muted-foreground {
     color: rgba(255, 255, 255, 0.7) !important;
   }
 }
