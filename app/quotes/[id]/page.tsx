@@ -190,12 +190,14 @@ export default function PublicQuotePage() {
           <div className="text-center">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Ready to Get Started?</h3>
             <div className="space-y-4">
-              <button
-                onClick={() => window.location.href = `https://dashboard.stripe.com/quotes/${quote.id}`}
-                className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-blue-700 transition-all"
+              <a
+                href="https://buy.stripe.com/00wcN73Gw6Vygj307yasg00"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-blue-700 transition-all"
               >
-                Accept & Pay Online
-              </button>
+                Pay Setup Fee ($52,500)
+              </a>
               <p className="text-gray-600">or</p>
               <button
                 onClick={() => window.print()}
@@ -203,6 +205,14 @@ export default function PublicQuotePage() {
               >
                 Print Quote
               </button>
+              <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                <p className="text-sm text-blue-800">
+                  <strong>Payment Options:</strong><br/>
+                  • Pay setup fee now with card or ACH (no login required)<br/>
+                  • Monthly subscription ($6,000/mo) starts after go-live<br/>
+                  • ACH recommended for lower fees on large amounts
+                </p>
+              </div>
             </div>
             <p className="mt-6 text-sm text-gray-500">
               Questions? Contact us at support@aimpactnexus.ai
