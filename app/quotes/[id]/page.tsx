@@ -32,7 +32,47 @@ export default function PublicQuotePage() {
 
   useEffect(() => {
     fetchQuote();
+    trackQuoteView();
   }, [params.id]);
+
+  const trackQuoteView = async () => {
+    try {
+      // Track page view
+      await fetch(`/api/quotes/${params.id}/track`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event: 'page_view',
+          metadata: {
+            url: window.location.href,
+            referrer: document.referrer,
+            screenWidth: window.screen.width,
+            timestamp: new Date().toISOString()
+          }
+        })
+      });
+
+      // Track when payment buttons are clicked
+      window.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        if (target.closest('a[href*="pay.aimpactnexus.ai"]')) {
+          fetch(`/api/quotes/${params.id}/track`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              event: 'payment_button_clicked',
+              metadata: {
+                buttonText: target.innerText,
+                paymentUrl: (target.closest('a') as HTMLAnchorElement)?.href
+              }
+            })
+          });
+        }
+      });
+    } catch (error) {
+      console.error('Error tracking view:', error);
+    }
+  };
 
   const fetchQuote = async () => {
     try {
