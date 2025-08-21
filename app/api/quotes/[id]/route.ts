@@ -35,6 +35,9 @@ export async function GET(
           { description: 'Location 3: Pioneer - Monthly Subscription', amount: 2000, recurring: true },
           // Included services
           { description: 'Core Platform Development', amount: 0, recurring: false, included: true },
+          { description: 'Cloud Web Application Hosting', amount: 0, recurring: false, included: true },
+          { description: 'Cloud Database Hosting', amount: 0, recurring: false, included: true },
+          { description: 'Multi-Factor Authentication (MFA) Setup', amount: 0, recurring: false, included: true },
           { description: 'Paylocity Time Management Integration', amount: 0, recurring: false, included: true },
           { description: 'Comprehensive Training Package', amount: 0, recurring: false, included: true },
           { description: 'Plex Integration', amount: 0, recurring: false, included: true },
