@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import { createClient } from '@supabase/supabase-js';
 import OpenAI from 'openai';
+import Stripe from 'stripe';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -11,6 +12,11 @@ const supabase = createClient(
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
+});
+
+// Initialize Stripe - will need secret key
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+  apiVersion: '2024-12-18.acacia',
 });
 
 export async function POST(req: NextRequest) {
@@ -68,7 +74,73 @@ Format as JSON with keys: projectName, scope, deliverables, paymentTerms, timeli
 
     const generatedQuote = JSON.parse(completion.choices[0].message.content || '{}');
 
-    // Create the quote in database
+    // First, create or get Stripe customer
+    let stripeCustomer;
+    try {
+      // Check if customer exists
+      const customers = await stripe.customers.list({
+        email: clientEmail,
+        limit: 1
+      });
+
+      if (customers.data.length > 0) {
+        stripeCustomer = customers.data[0];
+      } else {
+        // Create new customer
+        stripeCustomer = await stripe.customers.create({
+          name: clientName,
+          email: clientEmail,
+          metadata: {
+            created_by: session.user?.email || 'system'
+          }
+        });
+      }
+    } catch (stripeError) {
+      console.error('Stripe customer error:', stripeError);
+      // Continue without Stripe for now if there's an error
+    }
+
+    // Create Stripe Quote if we have a customer
+    let stripeQuote;
+    if (stripeCustomer && process.env.STRIPE_SECRET_KEY) {
+      try {
+        // Calculate the average amount for the line item
+        const amount = Math.round((generatedQuote.amountMin + generatedQuote.amountMax) / 2);
+        
+        stripeQuote = await stripe.quotes.create({
+          customer: stripeCustomer.id,
+          line_items: [{
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: generatedQuote.projectName || projectType,
+                description: generatedQuote.scope || projectDescription,
+              },
+              unit_amount: amount * 100, // Stripe uses cents
+            },
+            quantity: 1,
+          }],
+          expires_at: Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60), // 30 days from now
+          metadata: {
+            project_type: projectType,
+            timeline: generatedQuote.timeline || timeline,
+            deliverables: generatedQuote.deliverables || '',
+            payment_terms: generatedQuote.paymentTerms || 'Net 30'
+          },
+          collection_method: 'send_invoice',
+          footer: 'Thank you for choosing AImpact Nexus!',
+          header: 'Project Quote from AImpact Nexus',
+        });
+
+        // Finalize the quote to make it sendable
+        await stripe.quotes.finalizeQuote(stripeQuote.id);
+      } catch (stripeError) {
+        console.error('Stripe quote error:', stripeError);
+        // Continue without Stripe quote if there's an error
+      }
+    }
+
+    // Create the quote in database (with Stripe ID if available)
     const { data: quote, error } = await supabase
       .from('quotes')
       .insert({
@@ -83,7 +155,9 @@ Format as JSON with keys: projectName, scope, deliverables, paymentTerms, timeli
         deliverables: generatedQuote.deliverables,
         timeline: generatedQuote.timeline || timeline,
         payment_terms: generatedQuote.paymentTerms || 'Net 30',
-        created_by: session.user?.email
+        created_by: session.user?.email,
+        stripe_quote_id: stripeQuote?.id,
+        stripe_customer_id: stripeCustomer?.id
       })
       .select()
       .single();
@@ -96,6 +170,8 @@ Format as JSON with keys: projectName, scope, deliverables, paymentTerms, timeli
     return NextResponse.json({
       success: true,
       quoteId: quote.id,
+      stripeQuoteId: stripeQuote?.id,
+      stripeQuoteUrl: stripeQuote?.id ? `https://dashboard.stripe.com/quotes/${stripeQuote.id}` : null,
       quote: {
         id: quote.id,
         clientName: quote.client_name,
@@ -108,7 +184,8 @@ Format as JSON with keys: projectName, scope, deliverables, paymentTerms, timeli
         deliverables: quote.deliverables,
         timeline: quote.timeline,
         paymentTerms: quote.payment_terms,
-        createdAt: quote.created_at
+        createdAt: quote.created_at,
+        stripeQuoteId: stripeQuote?.id
       }
     });
   } catch (error) {
