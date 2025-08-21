@@ -166,4 +166,19 @@
   div[class*="glassmorphic"] * {
     color: white !important;
   }
+  
+  /* Force ALL h2 titles to be white */
+  h2.text-2xl.font-bold {
+    color: white !important;
+  }
+  
+  /* Force ALL component headers to be white */
+  h2 {
+    color: white !important;
+  }
+  
+  /* Force ALL paragraph descriptions to be light white */
+  p.text-muted-foreground {
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
 }

@@ -471,8 +471,8 @@ export default function EmailCampaigns() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">📧 Email Campaigns</h2>
-          <p className="text-muted-foreground">Create, send, and track email campaigns</p>
+          <h2 className="text-2xl font-bold text-white">📧 Email Campaigns</h2>
+          <p className="text-white/70">Create, send, and track email campaigns</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">

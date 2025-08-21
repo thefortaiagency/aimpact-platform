@@ -206,8 +206,8 @@ export default function Quotes({ onNavigate, refreshTrigger }: QuotesProps) {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">💰 Quotes</h2>
-          <p className="text-muted-foreground">Create and manage project quotes</p>
+          <h2 className="text-2xl font-bold text-white">💰 Quotes</h2>
+          <p className="text-white/70">Create and manage project quotes</p>
         </div>
         <div className="flex gap-2">
           <Button 
